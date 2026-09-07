@@ -23,7 +23,14 @@ require_text "${product}" 'ANDROID_USE_WIDEVINE := false'
 require_text "${product}" 'ANDROID_USE_NDK_TRANSLATION := false'
 require_text "${product}" 'ro.config.low_ram=true'
 require_text "${board}" 'waydroid_arm64_only/BoardConfig.mk'
+require_text "${board}" 'AESL_IMX8MM_GPU := true'
 require_text "${android_mk}" 'waydroid_aesl_2gb_arm64_only'
+require_text "${repo_root}/BoardConfig.mk" 'BOARD_MESA3D_GALLIUM_DRIVERS := etnaviv'
+require_text "${repo_root}/BoardConfig.mk" 'BOARD_MESA3D_VULKAN_DRIVERS :='
+require_text "${properties}" 'ro.hardware.egl=mesa'
+require_text "${properties}" 'ro.hardware.gralloc=minigbm_gbm_mesa'
+require_text "${properties}" 'ro.hardware.hwcomposer=waydroid'
+require_text "${properties}" 'ro.opengles.version=196609'
 require_text "${properties}" 'ro.lmk.use_psi=true'
 require_text "${properties}" 'ro.lmk.use_minfree_levels=false'
 require_text "${properties}" 'ro.surface_flinger.supports_background_blur=0'
@@ -32,5 +39,37 @@ if grep -Fq 'persist.sys.disable_rescue=true' "${properties}"; then
     echo "2 GB profile must not disable Android RescueParty" >&2
     exit 1
 fi
+
+# Evaluate the AESL GPU conditional while treating unrelated product
+# conditionals conservatively. None of these fallback packages or feature
+# declarations may remain active for this product.
+awk '
+BEGIN { depth = 0; active[0] = 1 }
+/^ifeq \(\$\(AESL_IMX8MM_GPU\),true\)$/ {
+    depth++; known[depth] = 1; condition[depth] = 1
+    active[depth] = active[depth - 1] && condition[depth]; next
+}
+/^ifneq \(\$\(AESL_IMX8MM_GPU\),true\)$/ {
+    depth++; known[depth] = 1; condition[depth] = 0
+    active[depth] = active[depth - 1] && condition[depth]; next
+}
+/^ifn?eq / {
+    depth++; known[depth] = 0; condition[depth] = 1
+    active[depth] = active[depth - 1]; next
+}
+/^else$/ {
+    if (known[depth]) condition[depth] = !condition[depth]
+    active[depth] = active[depth - 1] && condition[depth]; next
+}
+/^endif$/ {
+    delete active[depth]; delete known[depth]; delete condition[depth]
+    depth--; next
+}
+active[depth] && /vulkan\.|android\.hardware\.opengles\.aep|lib(EGL|GLESv1_CM|GLESv2)_angle|gralloc\.minigbm_dmabuf|android\.hardware\.graphics\.(allocator|mapper).*minigbm_dmabuf/ {
+    print "forbidden i.MX8MM fallback remains active: " $0 > "/dev/stderr"
+    failed = 1
+}
+END { exit failed }
+' "${repo_root}/device.mk"
 
 echo "AESL Android 16 i.MX8MM 2 GB profile: static validation passed"

@@ -4,5 +4,6 @@
 # Set before including the shared configuration so it selects the dedicated
 # system property file rather than the upstream 4 GB profile.
 AESL_WAYDROID_2GB := true
+AESL_IMX8MM_GPU := true
 
 include device/waydroid/waydroid/waydroid_arm64_only/BoardConfig.mk

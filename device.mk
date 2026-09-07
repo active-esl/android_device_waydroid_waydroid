@@ -90,8 +90,12 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.composer@2.4-service \
     android.hardware.graphics.mapper@2.0-impl-2.1 \
     vendor.waydroid.task@1.0-service \
-    hwcomposer.drm_minigbm \
     hwcomposer.waydroid
+
+ifneq ($(AESL_IMX8MM_GPU),true)
+PRODUCT_PACKAGES += \
+    hwcomposer.drm_minigbm
+endif
 
 PRODUCT_PACKAGES += \
     android.hardware.graphics.common-V4-ndk
@@ -101,14 +105,22 @@ PRODUCT_PACKAGES += \
     hwcomposer.redroid
 endif
 
+ifneq ($(AESL_IMX8MM_GPU),true)
 PRODUCT_PACKAGES += \
     libEGL_angle \
     libGLESv1_CM_angle \
     libGLESv2_angle \
     vulkan.pastel
+endif
 
 ifneq ($(TARGET_USE_MESA),false)
 
+ifeq ($(AESL_IMX8MM_GPU),true)
+PRODUCT_PACKAGES += \
+    android.hardware.graphics.allocator@4.0-service.minigbm_gbm_mesa \
+    android.hardware.graphics.mapper@4.0-impl.minigbm_gbm_mesa \
+    gralloc.minigbm_gbm_mesa
+else
 ifeq ($(filter %_waydroid_x86 %_waydroid_x86_64 %_waydroid_tv_x86 %_waydroid_tv_x86_64,$(TARGET_PRODUCT)),)
 PRODUCT_PACKAGES += \
     android.hardware.graphics.allocator@4.0-service.minigbm_dmabuf \
@@ -123,6 +135,7 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.mapper@4.0-impl.minigbm_gbm_mesa \
     gralloc.minigbm \
     gralloc.minigbm_gbm_mesa
+endif
 
 PRODUCT_PACKAGES += \
     dri_gbm \
@@ -130,7 +143,10 @@ PRODUCT_PACKAGES += \
     libGLESv1_CM_mesa \
     libGLESv2_mesa \
     libgallium_dri \
-    libgbm_mesa_wrapper \
+    libgbm_mesa_wrapper
+
+ifneq ($(AESL_IMX8MM_GPU),true)
+PRODUCT_PACKAGES += \
     vulkan.lvp \
     vulkan.virtio
 
@@ -146,9 +162,12 @@ PRODUCT_PACKAGES += \
     vulkan.broadcom \
     vulkan.panfrost
 endif
+endif
 
+ifneq ($(AESL_IMX8MM_GPU),true)
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.opengles.aep.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.opengles.aep.xml
+endif
 endif
 
 # DRM
@@ -293,11 +312,15 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.wifi.direct.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.direct.xml \
     frameworks/native/data/etc/android.software.sip.voip.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.sip.voip.xml \
     frameworks/native/data/etc/android.software.verified_boot.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.verified_boot.xml \
-    frameworks/native/data/etc/android.hardware.vulkan.level-1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.level.xml \
-    frameworks/native/data/etc/android.hardware.vulkan.version-1_3.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version.xml \
-    frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.compute.xml \
     frameworks/native/data/etc/android.hardware.keystore.app_attest_key.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.keystore.app_attest_key.xml \
     frameworks/native/data/etc/android.software.freeform_window_management.xml:system/etc/permissions/android.software.freeform_window_management.xml
+
+ifneq ($(AESL_IMX8MM_GPU),true)
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.vulkan.level-1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.level.xml \
+    frameworks/native/data/etc/android.hardware.vulkan.version-1_3.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version.xml \
+    frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.compute.xml
+endif
 
 # Power
 PRODUCT_PACKAGES += \

@@ -4,6 +4,13 @@
 # Media UBWC
 import /vendor_extra/build.prop vendor.gralloc.disable_ubwc
 
+# i.MX8MM graphics. The host provisioning layer pins gralloc.gbm.device to the
+# render node whose kernel driver is etnaviv. Vulkan is intentionally absent.
+ro.hardware.egl=mesa
+ro.hardware.gralloc=minigbm_gbm_mesa
+ro.hardware.hwcomposer=waydroid
+ro.opengles.version=196609
+
 # Audio
 af.thread.throttle=false
 audio.deep_buffer.media=true
