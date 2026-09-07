@@ -5,6 +5,7 @@ repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 products="${repo_root}/AndroidProducts.mk"
 product="${repo_root}/waydroid_aesl_2gb_arm64_only/lineage_waydroid_aesl_2gb_arm64_only.mk"
 properties="${repo_root}/configs/system-2gb.prop"
+media_codecs="${repo_root}/configs/media_codecs_c2_imx8mm.xml"
 board="${repo_root}/waydroid_aesl_2gb_arm64_only/BoardConfig.mk"
 android_mk="${repo_root}/Android.mk"
 
@@ -31,6 +32,11 @@ require_text "${properties}" 'ro.hardware.egl=mesa'
 require_text "${properties}" 'ro.hardware.gralloc=minigbm_gbm_mesa'
 require_text "${properties}" 'ro.hardware.hwcomposer=waydroid'
 require_text "${properties}" 'ro.opengles.version=196609'
+require_text "${repo_root}/device.mk" 'android.hardware.media.c2-service-v4l2'
+require_text "${repo_root}/device.mk" 'ro.vendor.v4l2_codec2.decoder.supported.h264=true'
+require_text "${repo_root}/device.mk" 'ro.vendor.v4l2_codec2.decode_concurrent_instances=1'
+require_text "${media_codecs}" 'c2.v4l2.avc.decoder'
+require_text "${media_codecs}" 'performance-point-1920x1080'
 require_text "${properties}" 'ro.lmk.use_psi=true'
 require_text "${properties}" 'ro.lmk.use_minfree_levels=false'
 require_text "${properties}" 'ro.surface_flinger.supports_background_blur=0'

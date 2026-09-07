@@ -238,6 +238,7 @@ PRODUCT_COPY_FILES += \
 endif
 
 # Media - FFMPEG
+ifneq ($(AESL_IMX8MM_GPU),true)
 PRODUCT_PACKAGES += \
     android.hardware.media.c2-ffmpeg-service
 
@@ -245,6 +246,25 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.ffmpeg-codec2.rank=0 \
     debug.ffmpeg-codec2.hwaccel.drm=0 \
     debug.ffmpeg-codec2.pixel_format=RGBX_8888
+endif
+
+# i.MX8MM Hantro/VSI stateful V4L2 decoder. Android 16's component is AIDL
+# and carries its own VINTF fragment and base seccomp policy.
+ifeq ($(AESL_IMX8MM_GPU),true)
+PRODUCT_SOONG_NAMESPACES += external/v4l2_codec2
+
+PRODUCT_PACKAGES += \
+    android.hardware.media.c2-service-v4l2 \
+    libc2plugin_store
+
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/media_codecs_c2_imx8mm.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.vendor.v4l2_codec2.decoder.supported.h264=true \
+    ro.vendor.v4l2_codec2.decode_concurrent_instances=1 \
+    debug.stagefright.c2-poolmask=0xfc0000
+endif
 
 ifneq ($(filter %_waydroid_x86 %_waydroid_x86_64 %_waydroid_tv_x86 %_waydroid_tv_x86_64,$(TARGET_PRODUCT)),)
 # Media - VA-API
