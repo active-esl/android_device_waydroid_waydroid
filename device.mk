@@ -332,9 +332,11 @@ $(call inherit-product-if-exists, vendor/intel/proprietary/houdini/native_bridge
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.nativebridge=1
 endif
 
-# Updater
+# Updater. AESL product images are updated as a signed host-managed pair.
+ifneq ($(AESL_WAYDROID_2GB),true)
 PRODUCT_PACKAGES += \
     WaydroidUpdater
+endif
 
 # DocumentsUI
 PRODUCT_PACKAGES += \
