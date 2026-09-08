@@ -154,8 +154,7 @@ ifneq ($(filter %_x86 %_x86_64,$(TARGET_PRODUCT)),)
 PRODUCT_PACKAGES += \
     vulkan.intel \
     vulkan.intel_hasvk \
-    vulkan.radeon \
-    vulkan.nouveau
+    vulkan.radeon
 else
 PRODUCT_PACKAGES += \
     vulkan.freedreno \

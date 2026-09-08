@@ -36,7 +36,9 @@ BUILD_FINGERPRINT := google/tangorpro/tangorpro:16/BP4A.260205.001/14624666:user
 
 ifneq ($(TARGET_USE_MESA),false)
 BOARD_MESA3D_GALLIUM_DRIVERS += i915 iris crocus
-BOARD_MESA3D_VULKAN_DRIVERS += intel intel_hasvk nouveau
+# Framework systems use Intel or AMD graphics. Do not enable Nouveau here:
+# Mesa's NVK path requires extra Rust build tooling and does not serve this lane.
+BOARD_MESA3D_VULKAN_DRIVERS += intel intel_hasvk
 BOARD_MESA3D_GALLIUM_VA := enabled
 BOARD_MESA3D_VIDEO_CODECS := all
 endif
