@@ -76,7 +76,7 @@ PRODUCT_PACKAGES += \
 USE_CAMERA_V4L2_HAL := true
 
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.7-external-service \
+    android.hardware.camera.provider-V1-external-service \
     camera.v4l2
 
 PRODUCT_COPY_FILES += \

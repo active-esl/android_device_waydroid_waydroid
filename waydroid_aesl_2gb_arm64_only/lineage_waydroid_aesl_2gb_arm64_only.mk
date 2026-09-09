@@ -5,6 +5,9 @@
 # 64-bit ABI avoids carrying a second userspace while retaining arm64 app
 # compatibility.
 AESL_WAYDROID_2GB := true
+# Product makefiles are evaluated before BoardConfig.mk.  Set this here as
+# well so device.mk selects only the i.MX8MM Etnaviv/minigbm package set.
+AESL_IMX8MM_GPU := true
 ANDROID_USE_GAPPS := false
 ANDROID_USE_WIDEVINE := false
 ANDROID_USE_NDK_TRANSLATION := false

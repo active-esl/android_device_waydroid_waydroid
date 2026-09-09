@@ -23,6 +23,7 @@ require_text "${product}" 'ANDROID_USE_GAPPS := false'
 require_text "${product}" 'ANDROID_USE_WIDEVINE := false'
 require_text "${product}" 'ANDROID_USE_NDK_TRANSLATION := false'
 require_text "${product}" 'ro.config.low_ram=true'
+require_text "${product}" 'AESL_IMX8MM_GPU := true'
 require_text "${board}" 'waydroid_arm64_only/BoardConfig.mk'
 require_text "${board}" 'AESL_IMX8MM_GPU := true'
 require_text "${android_mk}" 'waydroid_aesl_2gb_arm64_only'
@@ -33,6 +34,9 @@ require_text "${properties}" 'ro.hardware.gralloc=minigbm_gbm_mesa'
 require_text "${properties}" 'ro.hardware.hwcomposer=waydroid'
 require_text "${properties}" 'ro.opengles.version=196609'
 require_text "${repo_root}/device.mk" 'android.hardware.media.c2-service-v4l2'
+require_text "${repo_root}/device.mk" 'android.hardware.camera.provider-V1-external-service'
+require_text "${repo_root}/manifest.xml" '<hal format="aidl">'
+require_text "${repo_root}/manifest.xml" '<fqname>ICameraProvider/external/0</fqname>'
 require_text "${repo_root}/device.mk" 'ro.vendor.v4l2_codec2.decoder.supported.h264=true'
 require_text "${repo_root}/device.mk" 'ro.vendor.v4l2_codec2.decode_concurrent_instances=1'
 require_text "${media_codecs}" 'c2.v4l2.avc.decoder'
@@ -43,6 +47,11 @@ require_text "${properties}" 'ro.surface_flinger.supports_background_blur=0'
 
 if grep -Fq 'persist.sys.disable_rescue=true' "${properties}"; then
     echo "2 GB profile must not disable Android RescueParty" >&2
+    exit 1
+fi
+
+if grep -Fq 'android.hardware.camera.provider@2.7-external-service' "${repo_root}/device.mk"; then
+    echo "obsolete HIDL external-camera provider must not be packaged" >&2
     exit 1
 fi
 

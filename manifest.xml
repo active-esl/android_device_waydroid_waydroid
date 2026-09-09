@@ -53,14 +53,10 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <instance>default</instance>
         </interface>
     </hal>
-    <hal format="hidl">
+    <hal format="aidl">
         <name>android.hardware.camera.provider</name>
-        <transport>hwbinder</transport>
-        <version>2.7</version>
-        <interface>
-            <name>ICameraProvider</name>
-            <instance>external/0</instance>
-        </interface>
+        <version>1</version>
+        <fqname>ICameraProvider/external/0</fqname>
     </hal>
     <hal format="hidl">
         <name>android.hardware.configstore</name>
