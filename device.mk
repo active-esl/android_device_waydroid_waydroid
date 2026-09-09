@@ -117,6 +117,7 @@ ifneq ($(TARGET_USE_MESA),false)
 
 ifeq ($(AESL_IMX8MM_GPU),true)
 PRODUCT_PACKAGES += \
+    android.hardware.graphics.allocator-service.minigbm_gbm_mesa \
     android.hardware.graphics.allocator@4.0-service.minigbm_gbm_mesa \
     android.hardware.graphics.mapper@4.0-impl.minigbm_gbm_mesa \
     gralloc.minigbm_gbm_mesa
@@ -127,6 +128,9 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.mapper@4.0-impl.minigbm_dmabuf \
     gralloc.minigbm_dmabuf
 endif
+
+PRODUCT_PACKAGES += \
+    android.hardware.graphics.allocator-service.minigbm
 
 PRODUCT_PACKAGES += \
     android.hardware.graphics.allocator@4.0-service.minigbm \
