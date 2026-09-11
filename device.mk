@@ -92,9 +92,11 @@ PRODUCT_PACKAGES += \
     vendor.waydroid.task@1.0-service \
     hwcomposer.waydroid
 
-ifneq ($(AESL_IMX8MM_GPU),true)
+ifneq ($(AESL_GPU_STACK),mesa-etnaviv)
+ifneq ($(AESL_GPU_STACK),nxp-mali)
 PRODUCT_PACKAGES += \
     hwcomposer.drm_minigbm
+endif
 endif
 
 PRODUCT_PACKAGES += \
@@ -105,17 +107,19 @@ PRODUCT_PACKAGES += \
     hwcomposer.redroid
 endif
 
-ifneq ($(AESL_IMX8MM_GPU),true)
+ifneq ($(AESL_GPU_STACK),mesa-etnaviv)
+ifneq ($(AESL_GPU_STACK),nxp-mali)
 PRODUCT_PACKAGES += \
     libEGL_angle \
     libGLESv1_CM_angle \
     libGLESv2_angle \
     vulkan.pastel
 endif
+endif
 
 ifneq ($(TARGET_USE_MESA),false)
 
-ifeq ($(AESL_IMX8MM_GPU),true)
+ifeq ($(AESL_GPU_STACK),mesa-etnaviv)
 PRODUCT_PACKAGES += \
     android.hardware.graphics.allocator-service.minigbm_gbm_mesa \
     android.hardware.graphics.allocator@4.0-service.minigbm_gbm_mesa \
@@ -151,7 +155,8 @@ PRODUCT_PACKAGES += \
     libgallium_dri \
     libgbm_mesa_wrapper
 
-ifneq ($(AESL_IMX8MM_GPU),true)
+ifneq ($(AESL_GPU_STACK),mesa-etnaviv)
+ifneq ($(AESL_GPU_STACK),nxp-mali)
 PRODUCT_PACKAGES += \
     vulkan.lvp \
     vulkan.virtio
@@ -168,10 +173,13 @@ PRODUCT_PACKAGES += \
     vulkan.panfrost
 endif
 endif
+endif
 
-ifneq ($(AESL_IMX8MM_GPU),true)
+ifneq ($(AESL_GPU_STACK),mesa-etnaviv)
+ifneq ($(AESL_GPU_STACK),nxp-mali)
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.opengles.aep.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.opengles.aep.xml
+endif
 endif
 endif
 
@@ -242,8 +250,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/mediaextractor.32bit.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaextractor.policy
 endif
 
-# Media - FFMPEG
-ifneq ($(AESL_IMX8MM_GPU),true)
+# Media - generic fallback. Board products with an explicit media stack must
+# never quietly ship the fallback as hardware acceleration evidence.
+ifeq ($(strip $(AESL_MEDIA_STACK)),)
 PRODUCT_PACKAGES += \
     android.hardware.media.c2-ffmpeg-service
 
@@ -255,7 +264,7 @@ endif
 
 # i.MX8MM Hantro/VSI stateful V4L2 decoder. Android 16's component is AIDL
 # and carries its own VINTF fragment and base seccomp policy.
-ifeq ($(AESL_IMX8MM_GPU),true)
+ifeq ($(AESL_MEDIA_STACK),v4l2-codec2)
 PRODUCT_SOONG_NAMESPACES += external/v4l2_codec2
 
 PRODUCT_PACKAGES += \
@@ -269,6 +278,32 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.v4l2_codec2.decoder.supported.h264=true \
     ro.vendor.v4l2_codec2.decode_concurrent_instances=1 \
     debug.stagefright.c2-poolmask=0xfc0000
+endif
+
+# i.MX95 VPU/Hantro Codec2 from the exact reviewed NXP Android release.
+ifeq ($(AESL_MEDIA_STACK),nxp-hantro)
+PRODUCT_SOONG_NAMESPACES += \
+    vendor/nxp-opensource/imx \
+    vendor/nxp-opensource/imx_android_mm
+
+PRODUCT_PACKAGES += \
+    android.hardware.media.c2.service.imx \
+    codec2.vendor.base.policy \
+    codec2.vendor.ext.policy \
+    lib_imx_c2_videodec \
+    lib_imx_c2_videoenc
+
+PRODUCT_COPY_FILES += \
+    vendor/nxp-opensource/imx_android_mm/codec2/store/registry/c2_component_register_95:$(TARGET_COPY_OUT_VENDOR)/etc/c2_component_register \
+    vendor/nxp-opensource/imx_android_mm/mediacodec-profile/imx95/media_codecs_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    debug.c2.use_dmabufheaps=1 \
+    debug.stagefright.ccodec=4 \
+    debug.stagefright.omx_default_rank=0x200 \
+    debug.stagefright.c2-poolmask=0x70000 \
+    debug.stagefright.ccodec_delayed_params=true \
+    debug.stagefright.c2inputsurface=-1
 endif
 
 ifneq ($(filter %_waydroid_x86 %_waydroid_x86_64 %_waydroid_tv_x86 %_waydroid_tv_x86_64,$(TARGET_PRODUCT)),)
@@ -340,11 +375,13 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.keystore.app_attest_key.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.keystore.app_attest_key.xml \
     frameworks/native/data/etc/android.software.freeform_window_management.xml:system/etc/permissions/android.software.freeform_window_management.xml
 
-ifneq ($(AESL_IMX8MM_GPU),true)
+ifneq ($(AESL_GPU_STACK),mesa-etnaviv)
+ifneq ($(AESL_GPU_STACK),nxp-mali)
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.vulkan.level-1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.level.xml \
     frameworks/native/data/etc/android.hardware.vulkan.version-1_3.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version.xml \
     frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.compute.xml
+endif
 endif
 
 # Power
@@ -381,7 +418,7 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.nativebridge=1
 endif
 
 # Updater. AESL product images are updated as a signed host-managed pair.
-ifneq ($(AESL_WAYDROID_2GB),true)
+ifneq ($(AESL_HOST_MANAGED_UPDATE),true)
 PRODUCT_PACKAGES += \
     WaydroidUpdater
 endif

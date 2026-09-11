@@ -8,6 +8,8 @@ properties="${repo_root}/configs/system-2gb.prop"
 media_codecs="${repo_root}/configs/media_codecs_c2_imx8mm.xml"
 board="${repo_root}/waydroid_aesl_2gb_arm64_only/BoardConfig.mk"
 android_mk="${repo_root}/Android.mk"
+common="${repo_root}/products/aesl_arm64_common.mk"
+low_ram="${repo_root}/products/aesl_2gb_kiosk.mk"
 
 require_text() {
     local file="$1" text="$2"
@@ -19,13 +21,15 @@ require_text() {
 
 require_text "${products}" '$(VENDOR_NAME)_waydroid_aesl_2gb_arm64_only-user'
 require_text "${products}" '$(VENDOR_NAME)_waydroid_aesl_2gb_arm64_only-userdebug'
-require_text "${product}" 'ANDROID_USE_GAPPS := false'
-require_text "${product}" 'ANDROID_USE_WIDEVINE := false'
-require_text "${product}" 'ANDROID_USE_NDK_TRANSLATION := false'
-require_text "${product}" 'ro.config.low_ram=true'
-require_text "${product}" 'AESL_IMX8MM_GPU := true'
+require_text "${common}" 'ANDROID_USE_GAPPS := false'
+require_text "${common}" 'ANDROID_USE_WIDEVINE := false'
+require_text "${common}" 'ANDROID_USE_NDK_TRANSLATION := false'
+require_text "${low_ram}" 'ro.config.low_ram=true'
+require_text "${product}" 'AESL_MEMORY_PROFILE := 2gb'
+require_text "${product}" 'AESL_GPU_STACK := mesa-etnaviv'
+require_text "${product}" 'AESL_MEDIA_STACK := v4l2-codec2'
 require_text "${board}" 'waydroid_arm64_only/BoardConfig.mk'
-require_text "${board}" 'AESL_IMX8MM_GPU := true'
+require_text "${board}" 'AESL_GPU_STACK := mesa-etnaviv'
 require_text "${android_mk}" 'waydroid_aesl_2gb_arm64_only'
 require_text "${repo_root}/BoardConfig.mk" 'BOARD_MESA3D_GALLIUM_DRIVERS := etnaviv'
 require_text "${repo_root}/BoardConfig.mk" 'BOARD_MESA3D_VULKAN_DRIVERS :='
@@ -64,11 +68,11 @@ fi
 # declarations may remain active for this product.
 awk '
 BEGIN { depth = 0; active[0] = 1 }
-/^ifeq \(\$\(AESL_IMX8MM_GPU\),true\)$/ {
+/^ifeq \(\$\(AESL_GPU_STACK\),mesa-etnaviv\)$/ {
     depth++; known[depth] = 1; condition[depth] = 1
     active[depth] = active[depth - 1] && condition[depth]; next
 }
-/^ifneq \(\$\(AESL_IMX8MM_GPU\),true\)$/ {
+/^ifneq \(\$\(AESL_GPU_STACK\),mesa-etnaviv\)$/ {
     depth++; known[depth] = 1; condition[depth] = 0
     active[depth] = active[depth - 1] && condition[depth]; next
 }

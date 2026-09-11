@@ -23,6 +23,7 @@ endif
 
 PRODUCT_MAKEFILES := \
     $(VENDOR_NAME)_waydroid_aesl_2gb_arm64_only:$(LOCAL_DIR)/waydroid_aesl_2gb_arm64_only/$(VENDOR_NAME)_waydroid_aesl_2gb_arm64_only.mk \
+    $(VENDOR_NAME)_waydroid_aesl_imx95_arm64_only:$(LOCAL_DIR)/waydroid_aesl_imx95_arm64_only/$(VENDOR_NAME)_waydroid_aesl_imx95_arm64_only.mk \
     $(VENDOR_NAME)_waydroid_arm64:$(LOCAL_DIR)/waydroid_arm64/$(VENDOR_NAME)_waydroid_arm64.mk \
     $(VENDOR_NAME)_waydroid_arm64_only:$(LOCAL_DIR)/waydroid_arm64_only/$(VENDOR_NAME)_waydroid_arm64_only.mk \
     $(VENDOR_NAME)_waydroid_arm:$(LOCAL_DIR)/waydroid_arm/$(VENDOR_NAME)_waydroid_arm.mk \
@@ -37,6 +38,8 @@ PRODUCT_MAKEFILES := \
 COMMON_LUNCH_CHOICES := \
     $(VENDOR_NAME)_waydroid_aesl_2gb_arm64_only-user \
     $(VENDOR_NAME)_waydroid_aesl_2gb_arm64_only-userdebug \
+    $(VENDOR_NAME)_waydroid_aesl_imx95_arm64_only-user \
+    $(VENDOR_NAME)_waydroid_aesl_imx95_arm64_only-userdebug \
     $(VENDOR_NAME)_waydroid_arm64-user \
     $(VENDOR_NAME)_waydroid_arm64-userdebug \
     $(VENDOR_NAME)_waydroid_arm64-eng \

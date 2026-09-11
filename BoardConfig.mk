@@ -39,7 +39,7 @@ ifneq ($(TARGET_USE_MESA),false)
 BOARD_MESA3D_USES_MESON_BUILD := true
 BOARD_MESA3D_MESON_ARGS := -Dallow-kcmp=enabled -Dmesa-clc=system -Dprecomp-compiler=system
 BOARD_MESA3D_BUILD_LIBGBM := true
-ifeq ($(AESL_IMX8MM_GPU),true)
+ifeq ($(AESL_GPU_STACK),mesa-etnaviv)
 # The i.MX8MM GC7000Lite has a Mesa Etnaviv OpenGL ES path but no supported
 # Vulkan driver. Keep this product exact: no llvmpipe or software Vulkan
 # fallback may make an unaccelerated image appear healthy.
@@ -70,7 +70,7 @@ DEVICE_PRODUCT_COMPATIBILITY_MATRIX_FILE := $(DEVICE_PATH)/manifest_framework.xm
 
 # Properties
 BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
-ifeq ($(AESL_WAYDROID_2GB),true)
+ifeq ($(AESL_MEMORY_PROFILE),2gb)
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/configs/system-2gb.prop
 else
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
