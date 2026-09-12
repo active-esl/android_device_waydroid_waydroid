@@ -1,0 +1,7 @@
+AESL Waydroid device definitions
+Copyright 2026 Active ESL
+
+This fork contains Waydroid and Android-derived files carrying their original
+copyright and licence notices. AESL-authored additions are licensed under
+Apache-2.0 unless a file says otherwise. The root Apache-2.0 licence does not
+override a file-specific third-party notice.
