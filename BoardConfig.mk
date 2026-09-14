@@ -55,7 +55,11 @@ DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
 
 # Properties
 BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
+ifeq ($(AESL_MEMORY_PROFILE),2gb)
+TARGET_SYSTEM_PROP += $(DEVICE_PATH)/configs/system-2gb.prop
+else
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
+endif
 
 # Partitions
 TARGET_COPY_OUT_VENDOR := vendor
