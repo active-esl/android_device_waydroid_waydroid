@@ -22,8 +22,10 @@
          autodetected from the Configuration. -->
     <bool name="config_showNavigationBar">true</bool>
 
-    <!-- The device supports freeform window management -->
-    <bool name="config_freeformWindowManagement">true</bool>
+    <!-- Waydroid uses the host compositor; do not create Android freeform desktops. -->
+    <bool name="config_freeformWindowManagement">false</bool>
+    <bool name="config_isDesktopModeSupported">false</bool>
+    <bool name="config_canInternalDisplayHostDesktops">false</bool>
 
     <!-- Do not restrict the UI resolution on the WM side; use the native resolution of the device's
          screen -->
