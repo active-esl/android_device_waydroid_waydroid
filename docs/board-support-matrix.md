@@ -13,9 +13,13 @@ support-period and CRA evidence ownership lives in the product-manifest repo.
 The R16 Waydroid products select flattened APEX and raw ext4 `system.img`
 output (`TARGET_USERIMAGES_SPARSE_EXT_DISABLED := true`). The controlled
 manifest's [R16 2 GB run 35076252596](https://github.com/active-esl/waydroid-product-manifest/actions/runs/35076252596)
-built and type-checked the i.MX8MM pair from the pinned device revision; the
-manifest's image gate also checks ext4 geometry and content. That image-build
-evidence does not replace physical-board acceptance.
+built the i.MX8MM pair from device commit
+[`e9d3eda`](https://github.com/active-esl/android_device_waydroid_waydroid/commit/e9d3eda4e658e37c9c116ae3dccb55e7728c18a5).
+Its `system.img` SHA-256 is
+`b2bca3abd5993ad88cb032aa99d0eff2246b2ad8754df1ed6c2bae86e2a68b17`;
+the manifest's image gate checked raw ext4 geometry and content. The current
+device revision additionally restores the explicit flattened-APEX fallback
+and needs its own Android build evidence. Physical-board acceptance is pending.
 
 ## Adding a custom board
 
