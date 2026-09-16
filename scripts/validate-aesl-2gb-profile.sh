@@ -19,6 +19,14 @@ require_text() {
     }
 }
 
+require_line() {
+    local file="$1" line="$2"
+    grep -Fxq -- "${line}" "${file}" || {
+        echo "missing exact board setting in ${file}: ${line}" >&2
+        exit 1
+    }
+}
+
 require_text "${products}" '$(VENDOR_NAME)_waydroid_aesl_2gb_arm64_only-user'
 require_text "${products}" '$(VENDOR_NAME)_waydroid_aesl_2gb_arm64_only-userdebug'
 require_text "${common}" 'ANDROID_USE_GAPPS := false'
@@ -33,6 +41,10 @@ require_text "${board}" 'AESL_GPU_STACK := mesa-etnaviv'
 require_text "${android_mk}" 'waydroid_aesl_2gb_arm64_only'
 require_text "${repo_root}/BoardConfig.mk" 'BOARD_MESA3D_GALLIUM_DRIVERS := etnaviv'
 require_text "${repo_root}/BoardConfig.mk" 'BOARD_MESA3D_VULKAN_DRIVERS :='
+require_line "${repo_root}/BoardConfig.mk" 'TARGET_FLATTEN_APEX := true'
+require_line "${repo_root}/BoardConfig.mk" 'OVERRIDE_TARGET_FLATTEN_APEX := true'
+require_line "${repo_root}/BoardConfig.mk" 'BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := ext4'
+require_line "${repo_root}/BoardConfig.mk" 'TARGET_USERIMAGES_SPARSE_EXT_DISABLED := true'
 require_text "${properties}" 'ro.hardware.egl=mesa'
 require_text "${properties}" 'ro.hardware.gralloc=minigbm_gbm_mesa'
 require_text "${properties}" 'ro.hardware.hwcomposer=waydroid'

@@ -18,8 +18,11 @@ BOARD_VENDOR := waydroid
 
 DEVICE_PATH := device/waydroid/waydroid
 
-# APEX
+# Waydroid's hardened LXC profile intentionally exposes no host block devices.
+# Force flattened APEX even when a later product inherits updatable_apex.mk;
+# setting TARGET_FLATTEN_APEX alone can be overwritten by that product makefile.
 TARGET_FLATTEN_APEX := true
+OVERRIDE_TARGET_FLATTEN_APEX := true
 
 # Platform
 TARGET_BOARD_PLATFORM := waydroid
@@ -79,7 +82,7 @@ endif
 # Partitions
 TARGET_COPY_OUT_VENDOR := vendor
 BOARD_BUILD_GKI_BOOT_IMAGE_WITHOUT_RAMDISK := true
-BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := erofs
+BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_USES_METADATA_PARTITION := true
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
 TARGET_USERIMAGES_SPARSE_EXT_DISABLED := true

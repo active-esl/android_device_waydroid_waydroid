@@ -10,6 +10,17 @@ support-period and CRA evidence ownership lives in the product-manifest repo.
 | i.MX8MM custom 2 GB | `lineage_waydroid_aesl_2gb_arm64_only` | low-RAM, PSI/lmkd, 64-bit only | Mesa Etnaviv; no Vulkan fallback | Android V4L2 Codec2, H.264 decode | Integration build available; board acceptance required |
 | i.MX95 / FRDM i.MX95 | `lineage_waydroid_aesl_imx95_arm64_only` | board allocation to be measured | NXP Mali Bionic userspace matched to host kbase ABI | NXP i.MX Codec2/Hantro, pending integration | Target scaffolded; intentionally fails closed until the reviewed NXP overlay is staged |
 
+The R16 Waydroid products select flattened APEX and raw ext4 `system.img`
+output (`TARGET_USERIMAGES_SPARSE_EXT_DISABLED := true`). The controlled
+manifest's [R16 2 GB run 35076252596](https://github.com/active-esl/waydroid-product-manifest/actions/runs/35076252596)
+built the i.MX8MM pair from device commit
+[`e9d3eda`](https://github.com/active-esl/android_device_waydroid_waydroid/commit/e9d3eda4e658e37c9c116ae3dccb55e7728c18a5).
+Its `system.img` SHA-256 is
+`b2bca3abd5993ad88cb032aa99d0eff2246b2ad8754df1ed6c2bae86e2a68b17`;
+the manifest's image gate checked raw ext4 geometry and content. The current
+device revision additionally restores the explicit flattened-APEX fallback
+and needs its own Android build evidence. Physical-board acceptance is pending.
+
 ## Adding a custom board
 
 1. Add a thin product directory declaring `AESL_BOARD_FAMILY`,
