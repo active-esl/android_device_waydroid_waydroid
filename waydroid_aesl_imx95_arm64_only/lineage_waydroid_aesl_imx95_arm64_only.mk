@@ -6,6 +6,8 @@ AESL_GPU_STACK := nxp-mali
 AESL_MEDIA_STACK := nxp-wave6-v4l2
 AESL_NXP_PUBLIC_SOURCE_RELEASE := android-16.0.0_2.0.0
 AESL_NXP_GPU_BLOB_RELEASE := android-16.0.0_1.2.0
+BOARD_SOC_TYPE := IMX95
+TARGET_USE_MESA := false
 
 $(call inherit-product, $(LOCAL_PATH)/../products/aesl_arm64_common.mk)
 
@@ -34,6 +36,10 @@ endif
 CONFIG_REPO_PATH := device/nxp
 IMX_WSI_ALLOC_PATH := vendor/nxp/wsialloc
 include device/nxp/imx9/gpu/gpu_mali.mk
+
+# NXP's generic GPU makefile includes an optional debug tool absent from the
+# pinned FRDM inputs. Keep the accelerated libraries, allocator and firmware.
+PRODUCT_PACKAGES := $(filter-out gpu-top,$(PRODUCT_PACKAGES))
 
 PRODUCT_VENDOR_PROPERTIES += \
     ro.active_esl.nxp_public_source_release=$(AESL_NXP_PUBLIC_SOURCE_RELEASE) \
