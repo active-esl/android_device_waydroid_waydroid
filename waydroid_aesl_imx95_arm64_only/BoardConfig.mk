@@ -9,6 +9,7 @@ AESL_MEDIA_STACK := nxp-wave6-v4l2
 # Mesa or advertise Panfrost until the host kernel is deliberately migrated to
 # and validated with Panthor.
 TARGET_USE_MESA := false
+BOARD_SOC_TYPE := IMX95
 
 include device/waydroid/waydroid/waydroid_arm64_only/BoardConfig.mk
 
