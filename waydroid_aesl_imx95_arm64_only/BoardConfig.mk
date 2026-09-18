@@ -3,7 +3,7 @@
 
 AESL_BOARD_FAMILY := imx95
 AESL_GPU_STACK := nxp-mali
-AESL_MEDIA_STACK := nxp-hantro
+AESL_MEDIA_STACK := nxp-wave6-v4l2
 
 # The shipping LmP BSP currently exposes NXP's Mali kbase ABI. Do not compile
 # Mesa or advertise Panfrost until the host kernel is deliberately migrated to

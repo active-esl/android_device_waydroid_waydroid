@@ -3,7 +3,7 @@
 
 AESL_BOARD_FAMILY := imx95
 AESL_GPU_STACK := nxp-mali
-AESL_MEDIA_STACK := nxp-hantro
+AESL_MEDIA_STACK := nxp-wave6-v4l2
 AESL_NXP_ANDROID_RELEASE := android-16.0.0_2.0.0
 
 $(call inherit-product, $(LOCAL_PATH)/../products/aesl_arm64_common.mk)
@@ -20,11 +20,14 @@ endif
 ifeq ($(wildcard vendor/nxp/wsialloc/android/gralloc.device.mk),)
 $(error i.MX95 requires the reviewed NXP proprietary release overlay: missing wsialloc)
 endif
-ifeq ($(wildcard vendor/nxp/imx-vpu-hantro/Android.bp),)
-$(error i.MX95 requires the reviewed NXP proprietary release overlay: missing imx-vpu-hantro)
-endif
 ifeq ($(wildcard vendor/nxp-opensource/imx_android_mm/codec2/Android.bp),)
 $(error i.MX95 requires NXP $(AESL_NXP_ANDROID_RELEASE): missing imx_android_mm)
+endif
+ifeq ($(wildcard vendor/nxp-opensource/imx_android_mm/codec2/video_dec/v4l2_dec/Android.bp),)
+$(error i.MX95 requires the Wave6 V4L2 Codec2 decoder source)
+endif
+ifeq ($(wildcard vendor/nxp-opensource/imx_android_mm/codec2/video_enc/v4l2_enc/Android.bp),)
+$(error i.MX95 requires the Wave6 V4L2 Codec2 encoder source)
 endif
 
 CONFIG_REPO_PATH := device/nxp
@@ -33,6 +36,7 @@ include device/nxp/imx9/gpu/gpu_mali.mk
 
 PRODUCT_VENDOR_PROPERTIES += \
     ro.active_esl.nxp_android_release=$(AESL_NXP_ANDROID_RELEASE) \
+    ro.active_esl.vpu_driver=wave6-v4l2 \
     ro.active_esl.hardware_status=integration
 
 PRODUCT_BRAND := active_esl

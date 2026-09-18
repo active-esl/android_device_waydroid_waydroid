@@ -280,8 +280,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.stagefright.c2-poolmask=0xfc0000
 endif
 
-# i.MX95 VPU/Hantro Codec2 from the exact reviewed NXP Android release.
-ifeq ($(AESL_MEDIA_STACK),nxp-hantro)
+# i.MX95 Wave6 VPU through NXP's V4L2 Codec2 implementation.
+ifeq ($(AESL_MEDIA_STACK),nxp-wave6-v4l2)
 PRODUCT_SOONG_NAMESPACES += \
     vendor/nxp-opensource/imx \
     vendor/nxp-opensource/imx_android_mm
@@ -291,7 +291,10 @@ PRODUCT_PACKAGES += \
     codec2.vendor.base.policy \
     codec2.vendor.ext.policy \
     lib_imx_c2_videodec \
-    lib_imx_c2_videoenc
+    lib_imx_c2_videoenc \
+    lib_imx_c2_v4l2_dev \
+    lib_imx_c2_v4l2_dec \
+    lib_imx_c2_v4l2_enc
 
 PRODUCT_COPY_FILES += \
     vendor/nxp-opensource/imx_android_mm/codec2/store/registry/c2_component_register_95:$(TARGET_COPY_OUT_VENDOR)/etc/c2_component_register \
