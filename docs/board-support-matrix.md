@@ -34,7 +34,11 @@ and needs its own Android build evidence. Physical-board acceptance is pending.
 5. Record the product's market lifetime and support end date. Five years is a
    floor, not a universal ceiling for longer-lived industrial products.
 
-The i.MX95 candidate is pinned to NXP `android-16.0.0_2.0.0`. NXP also exposes
+The current i.MX95 integration pairs public hardware source from NXP
+`android-16.0.0_2.0.0` with the separately verified `r54p1-11eac0` Mali GPU
+and allocator input from `android-16.0.0_1.2.0`, matching the observed host
+kbase revision. This is a development input selection, pending image and board
+acceptance. NXP also exposes
 a Mesa/Panthor option in that release, but the current LmP host contract is the
 NXP Mali kbase stack. Changing that contract is a coordinated host-kernel and
 Android-vendor migration, not a product makefile toggle.
