@@ -1,0 +1,8 @@
+# FRDM i.MX95 device permissions required by the NXP Android multimedia stack.
+/dev/video*                            0660 system camera
+/dev/dma_heap/linux,cma                0666 system graphics
+/dev/dma_heap/linux,cma-uncached       0666 system graphics
+/dev/dma_heap/system                   0666 system graphics
+/dev/dma_heap/system-uncached          0666 system graphics
+/dev/dma_heap/reserved-uncached        0666 system system
+/dev/dmabuf_imx                        0664 system system

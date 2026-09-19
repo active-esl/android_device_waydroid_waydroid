@@ -13,10 +13,12 @@ BOARD_SOC_TYPE := IMX95
 
 include device/waydroid/waydroid/waydroid_arm64_only/BoardConfig.mk
 
-# NXP's Mali allocator service installs its own AIDL VINTF fragment. Keep the
-# common HIDL compatibility declarations but do not declare that AIDL instance
-# a second time, because libvintf rejects the complete device manifest.
-DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
+# NXP's Mali allocator service installs its own AIDL VINTF fragment. NXP's
+# Wave6 Codec2 service requires its AIDL component store to be declared, and
+# this product must not advertise the legacy OMX service that it does not ship.
+DEVICE_MANIFEST_FILE := \
+    $(DEVICE_PATH)/manifest.xml \
+    $(DEVICE_PATH)/manifest_media_c2_aidl.xml
 
 # NXP Codec2's Soong defaults require the i.MX platform identity. The
 # Waydroid base keeps TARGET_BOARD_PLATFORM=waydroid for its own build rules.
