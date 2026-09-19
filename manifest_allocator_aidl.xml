@@ -1,0 +1,17 @@
+<!--
+     Copyright (C) 2026 Active ESL
+     SPDX-License-Identifier: Apache-2.0
+
+     Generic Waydroid products declare the AIDL allocator here. NXP Mali
+     products use the allocator service package's own VINTF fragment instead.
+-->
+<manifest version="9.0" type="device">
+    <hal format="aidl">
+        <name>android.hardware.graphics.allocator</name>
+        <version>2</version>
+        <interface>
+            <name>IAllocator</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+</manifest>

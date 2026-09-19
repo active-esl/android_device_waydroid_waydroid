@@ -68,7 +68,9 @@ WIFI_HIDL_FEATURE_AWARE := true
 WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
 
 # HIDL
-DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
+DEVICE_MANIFEST_FILE := \
+    $(DEVICE_PATH)/manifest.xml \
+    $(DEVICE_PATH)/manifest_allocator_aidl.xml
 DEVICE_PRODUCT_COMPATIBILITY_MATRIX_FILE := $(DEVICE_PATH)/manifest_framework.xml
 
 # Properties
