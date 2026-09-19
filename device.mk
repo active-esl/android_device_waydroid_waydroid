@@ -289,7 +289,6 @@ PRODUCT_SOONG_NAMESPACES += \
 PRODUCT_PACKAGES += \
     android.hardware.media.c2.service.imx \
     codec2.vendor.base.policy \
-    codec2.vendor.ext.policy \
     lib_imx_c2_videodec \
     lib_imx_c2_videoenc \
     lib_imx_c2_v4l2_dev \
@@ -297,10 +296,13 @@ PRODUCT_PACKAGES += \
     lib_imx_c2_v4l2_enc
 
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/codec2.vendor.ext.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/codec2.vendor.ext.policy \
+    $(LOCAL_PATH)/configs/ueventd.imx95.rc:$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc \
     vendor/nxp-opensource/imx_android_mm/codec2/store/registry/c2_component_register_95:$(TARGET_COPY_OUT_VENDOR)/etc/c2_component_register \
     vendor/nxp-opensource/imx_android_mm/mediacodec-profile/imx95/media_codecs_c2.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_c2.xml
 
 PRODUCT_PROPERTY_OVERRIDES += \
+    media.c2.hal.selection=aidl \
     debug.c2.use_dmabufheaps=1 \
     debug.stagefright.ccodec=4 \
     debug.stagefright.omx_default_rank=0x200 \

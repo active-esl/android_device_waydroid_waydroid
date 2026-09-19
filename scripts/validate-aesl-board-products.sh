@@ -40,8 +40,9 @@ require_text "${imx95}" 'Wave6 V4L2 Codec2 encoder source'
 require_text "${imx95}" 'missing imx_android_mm'
 require_text "${imx95_board}" 'TARGET_USE_MESA := false'
 require_text "${imx95_board}" 'BOARD_SOC_TYPE := IMX95'
-require_text "${imx95_board}" 'DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml'
+require_text "${imx95_board}" '$(DEVICE_PATH)/manifest_media_c2_aidl.xml'
 require_text "${repo_root}/BoardConfig.mk" '$(DEVICE_PATH)/manifest_allocator_aidl.xml'
+require_text "${repo_root}/BoardConfig.mk" '$(DEVICE_PATH)/manifest_media_omx.xml'
 require_text "${imx95_board}" 'SOONG_CONFIG_IMXPLUGIN_BOARD_PLATFORM := imx9'
 require_text "${imx95_board}" 'SOONG_CONFIG_IMXPLUGIN_BOARD_SOC_TYPE := IMX95'
 require_text "${imx95_board}" 'SOONG_CONFIG_IMXPLUGIN_BOARD_HAVE_VPU := true'
@@ -52,6 +53,12 @@ require_text "${repo_root}/device.mk" 'android.hardware.media.c2.service.imx'
 require_text "${repo_root}/device.mk" 'c2_component_register_95'
 require_text "${repo_root}/device.mk" 'lib_imx_c2_v4l2_dec'
 require_text "${repo_root}/device.mk" 'lib_imx_c2_v4l2_enc'
+require_text "${repo_root}/device.mk" 'media.c2.hal.selection=aidl'
+require_text "${repo_root}/device.mk" '$(LOCAL_PATH)/configs/codec2.vendor.ext.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/codec2.vendor.ext.policy'
+require_text "${repo_root}/configs/codec2.vendor.ext.policy" 'uname: 1'
+require_text "${repo_root}/device.mk" '$(LOCAL_PATH)/configs/ueventd.imx95.rc:$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc'
+require_text "${repo_root}/configs/ueventd.imx95.rc" '/dev/dma_heap/system                   0666 system graphics'
+require_text "${repo_root}/configs/ueventd.imx95.rc" '/dev/dmabuf_imx                        0664 system system'
 
 # Allocator service packages install their own VINTF fragments.  Repeating the
 # AIDL allocator in the common device manifest makes libvintf reject the whole
@@ -70,6 +77,42 @@ if aidl_allocator:
     raise SystemExit(
         "common manifest must not duplicate allocator service AIDL VINTF fragments"
     )
+PY
+
+# The FRDM image ships NXP's AIDL Codec2 store and no legacy OMX service.
+python3 - \
+    "${repo_root}/manifest.xml" \
+    "${repo_root}/manifest_media_c2_aidl.xml" \
+    "${repo_root}/manifest_media_omx.xml" <<'PY'
+import sys
+import xml.etree.ElementTree as ET
+
+common, c2_fragment, omx_fragment = [
+    ET.parse(path).getroot() for path in sys.argv[1:]
+]
+
+def hals(manifest, name):
+    return [hal for hal in manifest.findall("hal") if hal.findtext("name") == name]
+
+if hals(common, "android.hardware.media.omx"):
+    raise SystemExit("common manifest must not force legacy OMX onto FRDM")
+
+c2 = hals(c2_fragment, "android.hardware.media.c2")
+if len(c2) != 1 or c2[0].get("format") != "aidl":
+    raise SystemExit("FRDM Codec2 manifest must declare one AIDL component store")
+if c2[0].findtext("version") != "1":
+    raise SystemExit("FRDM Codec2 component store must use AIDL version 1")
+interface = c2[0].find("interface")
+if interface is None:
+    raise SystemExit("FRDM Codec2 component store interface is missing")
+if interface.findtext("name") != "IComponentStore":
+    raise SystemExit("FRDM Codec2 component store interface is invalid")
+if interface.findtext("instance") != "default":
+    raise SystemExit("FRDM Codec2 default component store is missing")
+
+omx = hals(omx_fragment, "android.hardware.media.omx")
+if len(omx) != 1 or omx[0].get("format") != "hidl":
+    raise SystemExit("generic Waydroid OMX compatibility fragment is invalid")
 PY
 
 if grep -R -Fq 'AESL_IMX8MM_GPU' \
